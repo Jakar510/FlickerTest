@@ -15,7 +15,6 @@ namespace FlickerTest.Models
 		public LightThemeDictionary()
 		{
 			InitializeComponent();
-			Add(new BaseApplicationResourceDictionary());
 		}
 
 
