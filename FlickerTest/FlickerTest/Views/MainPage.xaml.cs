@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using FlickerTest.Services;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -10,9 +11,10 @@ namespace FlickerTest.Views
 	[DesignTimeVisible(false)]
 	public partial class MainPage : TabbedPage
 	{
-		public MainPage()
+		public MainPage(Theme theme = Theme.Unspecified)
 		{
 			InitializeComponent();
+			App.SetTheme(theme);
 		}
 	}
 }
