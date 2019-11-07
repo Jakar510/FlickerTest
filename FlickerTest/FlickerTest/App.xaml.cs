@@ -1,94 +1,87 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FlickerTest.Models;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 using FlickerTest.Services;
 using FlickerTest.Views;
-using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace FlickerTest
 {
-	public partial class App : Application
-	{
+    public partial class App : Application
+    {
 
-		public App()
-		{
-			InitializeComponent();
+        public App()
+        {
+            InitializeComponent();
 
-			DependencyService.Register<MockDataStore>();
-			//Theme systemTheme = GetOperatingSystemTheme();
-			Theme systemThemeAsync = GetOperatingSystemThemeAsync().Result;
-			MainPage = new MainPage();
-		}
+            DependencyService.Register<MockDataStore>();
 
-		protected override void OnStart()
-		{
-			// Handle when your app starts
-		}
+            MainPage = new MainPage();
+        }
 
-		protected override void OnSleep()
-		{
-			// Handle when your app sleeps
-		}
+        protected override void OnStart()
+        {
+            base.OnStart();
 
-		protected override void OnResume()
-		{
-			// Handle when your app resumes
-		}
+            SetOperatingSystemTheme();
+        }
 
+        protected override void OnResume()
+        {
+            base.OnResume();
 
+            SetOperatingSystemTheme();
+        }
 
-		public static Theme GetOperatingSystemTheme()
-		{
-			//Theme systemTheme = await DependencyService.Get<IEnvironment>().GetOperatingSystemTheme().ConfigureAwait(true);
-			Theme systemTheme = DependencyService.Get<IEnvironment>().GetOperatingSystemTheme();
+        public static void SetOperatingSystemTheme()
+        {
+            Theme systemTheme = DependencyService.Get<IEnvironment>().GetOperatingSystemTheme();
 
-			SetTheme(systemTheme);
-			return systemTheme;
+            SetTheme(systemTheme);
+        }
 
-		}
-		public static async Task<Theme> GetOperatingSystemThemeAsync()
-		{
-			Theme systemTheme = await DependencyService.Get<IEnvironment>().GetOperatingSystemThemeAsync().ConfigureAwait(true);
+        public static async Task SetOperatingSystemThemeAsync()
+        {
+            Theme systemTheme = await DependencyService.Get<IEnvironment>().GetOperatingSystemThemeAsync();
 
-			SetTheme(systemTheme);
-			return systemTheme;
+            SetTheme(systemTheme);
+        }
 
-		}
-		internal static async void SetTheme(Theme theme)
-		{
-			try
-			{
-				//Handle Light Theme & Dark Theme
-				if (theme == Theme.Unspecified) theme = CurrentTheme;
+        internal static void SetTheme(Theme theme)
+        {
+            try
+            {
+                //Handle Light Theme & Dark Theme
+                if (theme is Theme.Unspecified)
+                    theme = CurrentTheme;
 
-				switch (theme)
-				{
-					// https://lalorosas.com/blog/dark-mode
-					// https://codetraveler.io/2019/09/11/check-for-dark-mode-in-xamarin-forms/
+                if (Current.Resources.MergedDictionaries.Any())
+                    Current.Resources.MergedDictionaries.Clear();
 
-					case Theme.Dark:
-						Current.Resources = new DarkThemeDictionary();
-						break;
-					case Theme.Light:
-						Current.Resources = new LightThemeDictionary();
-						break;
-					case Theme.Unspecified:
-					default:
-						throw new ArgumentOutOfRangeException(nameof(theme), theme, null);
-				}
+                switch (theme)
+                {
+                    // https://lalorosas.com/blog/dark-mode
+                    // https://codetraveler.io/2019/09/11/check-for-dark-mode-in-xamarin-forms/
 
-				CurrentTheme = theme;
+                    case Theme.Dark:
+                        Current.Resources.Add(new DarkThemeDictionary());
+                        break;
+                    case Theme.Light:
+                        Current.Resources.Add(new LightThemeDictionary());
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(theme), theme, null);
+                }
 
-				//... 
-			}
-			catch (Exception e)
-			{
-				Console.Write(e.StackTrace);
-			}
-		}
+                CurrentTheme = theme;
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.StackTrace);
+            }
+        }
 
-		public static Theme CurrentTheme { get; set; }
-	}
+        public static Theme CurrentTheme { get; set; }
+    }
 }
