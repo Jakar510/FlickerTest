@@ -9,7 +9,6 @@ using Xamarin.Forms.Xaml;
 
 namespace FlickerTest.Models
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class BaseApplicationResourceDictionary : ResourceDictionary
 	{
 		public BaseApplicationResourceDictionary()

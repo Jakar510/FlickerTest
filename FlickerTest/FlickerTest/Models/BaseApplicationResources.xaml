@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:services="clr-namespace:FlickerTest.Services;assembly=FlickerTest"
              mc:Ignorable="d"
-             x:Class="TrueLogicMobile.Models.BaseApplicationResourceDictionary">
+             x:Class="FlickerTest.Models.BaseApplicationResourceDictionary">
 
 
 	<Color x:Key="NavigationPrimary">#2196F3</Color>
